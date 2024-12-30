@@ -1,0 +1,13 @@
+name: "Test the client application source code"
+on:
+  workflow_call:
+
+jobs:
+  test:
+    name: "Build then test Client Application"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_ACCESS_TOKEN }}
+      - run: docker build --progress=plain -t chiedu/multi-container-client -f client/Dockerfile.dev ./client
+      - run: docker -e CI=true chiedu/multi-container-client npm run test
