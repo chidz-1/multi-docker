@@ -17,4 +17,4 @@ jobs:
       - uses: actions/checkout@v2
       - run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_ACCESS_TOKEN }}
       - run: docker build --progress=plain -t chiedu/multi-container-client -f client/Dockerfile.dev ./client
-      - run: docker -e CI=true chiedu/multi-container-client npm run test
+      - run: docker run -e CI=true chiedu/multi-container-client npm run test
