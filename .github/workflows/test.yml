@@ -1,6 +1,13 @@
 name: "Test the client application source code"
 on:
   workflow_call:
+    secrets:
+      DOCKER_USERNAME:
+        required: true
+        description: "Docker hub user name"
+      DOCKER_ACCESS_TOKEN:
+        required: true
+        description: "Docker hub access token"
 
 jobs:
   test:
