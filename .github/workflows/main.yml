@@ -22,4 +22,8 @@ jobs:
       - run: docker build --progress=plain -t chiedu/multi-docker-client ./client
       - run: docker build --progress=plain -t chiedu/multi-docker-fib-calculator ./fib-calculator
       - run: docker build --progress=plain -t chiedu/multi-docker-fib-nginx ./nginx
-    # TODO push to docker hub
+        # Push all images to docker hub
+      - run: docker push chiedu/multi-docker-api
+      - run: docker push chiedu/multi-docker-client
+      - run: docker push chiedu/multi-docker-fib-calculator
+      - run: docker push chiedu/multi-docker-fib-nginx
