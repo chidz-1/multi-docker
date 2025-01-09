@@ -20,3 +20,6 @@
 .env.production.local
 
 .vscode
+
+# Course material
+/complex-gh-164

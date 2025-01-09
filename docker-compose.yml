@@ -1,27 +1,25 @@
 version: "3"
 services:
-  postgres:
-    image: postgres:latest
-    environment:
-      - POSTGRES_PASSWORD=${PG_PASSWORD}
-  redis:
-    image: redis:latest
   client:
-    build:
-      context: ./client
-      dockerfile: Dockerfile.dev
-    volumes:
-      - /app/node_modules
-      - ./client:/app
+    hostname: client
+    image: chiedu/multi-docker-client
+    mem_limit: 128m
+  nginx:
+    hostname: nginx
+    image: chiedu/multi-docker-fib-nginx
+    mem_limit: 128m
+    ports:
+      - 80:80
+  fib-calculator:
+    hostname: fib-calculator
+    image: chiedu/multi-docker-fib-calculator
+    mem_limit: 128m
     environment:
-      - WDS_SOCKET_PORT=0
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
   api:
-    build:
-      context: ./api
-      dockerfile: Dockerfile.dev
-    volumes:
-      - /app/node_modules
-      - ./api:/app
+    hostname: api
+    image: chiedu/multi-docker-api
     environment:
       - REDIS_HOST=${REDIS_HOST}
       - REDIS_PORT=${REDIS_PORT}
@@ -30,23 +28,3 @@ services:
       - PG_DATABASE=${PG_DATABASE}
       - PG_PASSWORD=${PG_PASSWORD}
       - PG_PORT=${PG_PORT}
-  fib-calculator:
-    build:
-      context: ./fib-calculator
-      dockerfile: Dockerfile.dev
-    volumes:
-      - /app/node_modules
-      - ./fib-calculator:/app
-    environment:
-      - REDIS_HOST=${REDIS_HOST}
-      - REDIS_PORT=${REDIS_PORT}
-  nginx:
-    depends_on:
-      - api
-      - client
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile.dev
-    restart: always
-    ports:
-      - 8000:80
