@@ -27,3 +27,18 @@ jobs:
       - run: docker push chiedu/multi-docker-client
       - run: docker push chiedu/multi-docker-fib-calculator
       - run: docker push chiedu/multi-docker-fib-nginx
+      # Create zip file of repo for EB deployment: S3 & EC2
+      - name: Generate deployment package
+        run: zip -r deploy.zip . -x '*.git*'
+      # Deploy to EB
+      - name: Deploy to EB
+        uses: einaregilsson/beanstalk-deploy@v18
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
+          application_name: multi-docker
+          environment_name: Multi-docker-env
+          existing_bucket_name: elasticbeanstalk-eu-north-1-277707125544
+          region: eu-north-1
+          version_label: ${{ github.sha }}
+          deployment_package: deploy.zip
